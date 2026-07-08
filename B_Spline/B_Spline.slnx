@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="B_Spline/B_Spline.vcxproj" />
+  <Project Path="B_Spline/B_Spline.vcxproj" Id="ef752997-c39d-46ac-b686-e86944953784" />
 </Solution>
