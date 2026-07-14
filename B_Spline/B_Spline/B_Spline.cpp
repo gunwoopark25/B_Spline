@@ -166,15 +166,24 @@ void B_Spline::de_boor_algorithm()
 
         for (int i = 0; i < n_new; i++)
         {
-            if (i <= j - 2)                      // 앞쪽: 영향 없음
+            if (i <= j - 2)
+            {
                 d[k][i] = d[k - 1][i];
-            else if (i >= j + 2)                 // 뒤쪽: 한 칸 밀림
+            }
+            else if (i >= j + 2)
+            {
                 d[k][i] = d[k - 1][i - 1];
-            else                                 // i = j-1, j, j+1 만 보간
+            }
+            else                                
             {
                 double denom = u[k - 1][i + 2] - u[k - 1][i - 1];
-                if (denom == 0) { d[k][i] = d[k - 1][i - 1]; continue; }
+               
+                if (denom == 0) 
+                { 
+                    d[k][i] = d[k - 1][i - 1]; continue; 
+                }
                 double alpha = (parameter - u[k - 1][i - 1]) / denom;
+                
                 d[k][i] = (1 - alpha) * d[k - 1][i - 1] + alpha * d[k - 1][i];
             }
         }
