@@ -15,13 +15,15 @@ B_Spline::B_Spline()
     Degree = 3;
     Number_of_CP = Degree + 2;
     div = 100;
+    R = 10;
 
     POC = new Point2D[div + 1];
 }
 
 B_Spline::~B_Spline()
 {
-
+    psFile << "showpage" << endl;
+    psFile.close();
 }
 
 void B_Spline::saveData()
@@ -62,6 +64,9 @@ void B_Spline::saveData()
 		cout << Knots[i] << endl;
 	}
     readFile.close();
+
+    psFile.open("B-Spline.ps");
+    psFile << "%!PS" << endl;
 }
 
 void B_Spline::define_d(int h)
@@ -153,18 +158,20 @@ void B_Spline::de_boor_algorithm()
 {
     for (int k = 1; k <= Degree; k++)
     {
-        int m_old = Number_of_Knots + (k - 1);   // u[k-1]의 길이
-        int n_new = Number_of_CP + k;            // 이번 단계 제어점 개수
+        int m = Number_of_Knots + (k - 1);   // u[k-1]의 길이
+        int n = Number_of_CP + k;            // 이번 단계 제어점 개수
 
         /*--- parameter가 속한 knot 구간 j 찾기 ---*/
         int j = 0;
-        for (int s = 0; s < m_old - 1; s++)
+        for (int s = 0; s < m - 1; s++)
         {
-            if (u[k - 1][s] <= parameter && u[k - 1][s] < u[k - 1][m_old - 1])
+            if (u[k - 1][s] <= parameter && u[k - 1][s] < u[k - 1][m - 1])
+            {
                 j = s;
+            }
         }
 
-        for (int i = 0; i < n_new; i++)
+        for (int i = 0; i < n; i++)
         {
             if (i <= j - 2)
             {
@@ -209,4 +216,57 @@ void B_Spline::showPOC()
     {
         cout << POC[i].x << " " << POC[i].y << endl;
     }
+}
+
+void B_Spline::writePS()
+{
+    /*---- Drawing Line ----*/
+    psFile << "newpath" << endl;
+    for (int i = 1; i <= div; i++)
+    {
+        if (i == 1)
+        {
+            psFile << POC[i].x << " " << POC[i].y << " " << "moveto" << endl;
+        }
+        else
+        {
+            psFile << POC[i].x << " " << POC[i].y << " " << "lineto" << endl;
+        }
+    }
+    psFile << "stroke" << endl;
+
+    for (int i = 0; i < Number_of_CP; i++)
+    {
+        psFile << "newpath" << endl;
+        if (i == 0)
+        {
+            psFile << zeta[1][i] << " " << CP[i] << " " << R << " " << "0 360 arc" << endl;
+            psFile << "fill" << endl;
+        }
+        else if (i == Number_of_CP - 1)
+        {
+            psFile << zeta[1][i] << " " << CP[i] << " " << R << " " << "0 360 arc" << endl;
+            psFile << "fill" << endl;
+        }
+        else
+        {
+            psFile << zeta[1][i] << " " << CP[i] << " " << R << " " << "0 360 arc" << endl;
+            psFile << "stroke" << endl;
+        }
+    }
+
+    /*---- Drawing Line ----*/
+    psFile << "newpath" << endl;
+    for (int i = 0; i < Number_of_CP; i++)
+    {
+        if (i == 0)
+        {
+            psFile << zeta[1][i] << " " << CP[i] << " " << "moveto" << endl;
+        }
+        else
+        {
+            psFile << zeta[1][i] << " " << CP[i] << " " << "lineto" << endl;
+        }
+    }
+    psFile << "stroke" << endl;
 }

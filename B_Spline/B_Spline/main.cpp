@@ -22,5 +22,6 @@ void main()
         B.savePOC(h);
     }
     B.showPOC();
+    B.writePS();
 
 }

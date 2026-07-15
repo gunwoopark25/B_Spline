@@ -21,6 +21,7 @@ public:
     int Degree = 0;
     int Number_of_CP = 0;
 	int Number_of_Knots = 0;
+    int R = 0;
     double parameter = 0;
 
     double *CP = nullptr;
@@ -40,4 +41,5 @@ public:
     void de_boor_algorithm();
     void savePOC(int h);
     void showPOC();
+    void writePS();
 };
